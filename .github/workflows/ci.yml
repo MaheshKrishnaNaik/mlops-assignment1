@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Lint
+        run: flake8 src tests
+      - name: Unit tests
+        run: pytest -v --junitxml=test-results.xml
+      - name: Download and clean data
+        run: python -m src.data
+      - name: Train models
+        run: python -m src.train
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ml-artifacts
+          path: |
+            test-results.xml
+            models/
+            mlruns/
+            data/processed/
+      - name: Build Docker image
+        run: docker build -t heart-api:ci .
+      - name: Smoke test container
+        run: |
+          docker run -d -p 8000:8000 --name api heart-api:ci
+          sleep 8
+          curl -f http://localhost:8000/health
+          curl -f -X POST http://localhost:8000/predict -H "Content-Type: application/json" \
+            -d '{"age":63,"sex":1,"cp":1,"trestbps":145,"chol":233,"fbs":1,"restecg":2,"thalach":150,"exang":0,"oldpeak":2.3,"slope":3,"ca":0,"thal":6}'
+          docker logs api
