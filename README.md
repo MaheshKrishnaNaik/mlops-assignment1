@@ -1,7 +1,7 @@
 # MLOps Assignment 1 - Heart Disease Risk Prediction
 
 Author: 2025af05162 (2025af05162@wilp.bits-pilani.ac.in)
-Repository: _<add your GitHub repo link here>_
+Repository: https://github.com/MaheshKrishnaNaik/mlops-assignment1
 
 ## Architecture
 
