@@ -3,7 +3,8 @@ FROM python:3.12-slim
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 WORKDIR /app
 
-RUN pip install --no-cache-dir pandas numpy "scikit-learn>=1.5,<2" joblib fastapi uvicorn pydantic prometheus-client
+COPY requirements-api.txt .
+RUN pip install --no-cache-dir -r requirements-api.txt
 
 COPY src/ src/
 COPY models/model.joblib models/model.joblib

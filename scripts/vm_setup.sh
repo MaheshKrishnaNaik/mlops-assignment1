@@ -16,6 +16,7 @@ python -m src.data
 PYTHONPATH=. python notebooks/eda.py
 flake8 src tests
 pytest -q
+rm -rf mlruns
 python -m src.train
 
 echo "== 3. Docker build + run =="
