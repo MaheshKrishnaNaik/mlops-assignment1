@@ -71,7 +71,7 @@ def train_all(df=None, experiment="heart-disease"):
                     plt.savefig(p)
                     plt.close()
                     mlflow.log_artifact(str(p))
-            mlflow.sklearn.log_model(pipe, "model", skops_trusted_types=["sklearn.tree._tree.Tree"])
+            mlflow.sklearn.log_model(pipe, "model")
             best_params = {k: str(v) for k, v in search.best_params_.items()}
             results[name] = {**cv_metrics, **test_metrics, "params": best_params}
             if cv_metrics["cv_roc_auc"] > best_auc:
